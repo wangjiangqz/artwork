@@ -1,4 +1,4 @@
-package com.work.artwork.common.util;
+package com.work.artwork.common.utils;
 
 import com.work.artwork.entity.SysUser;
 

@@ -3,7 +3,7 @@ package com.work.artwork.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.work.artwork.common.model.Result;
 import com.work.artwork.common.model.SysUserConstans;
-import com.work.artwork.common.util.CommonUtil;
+import com.work.artwork.common.utils.CommonUtil;
 import com.work.artwork.entity.SysUser;
 import com.work.artwork.service.SysUserService;
 import org.springframework.stereotype.Controller;

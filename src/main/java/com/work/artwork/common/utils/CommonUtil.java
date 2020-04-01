@@ -1,4 +1,4 @@
-package com.work.artwork.common.util;
+package com.work.artwork.common.utils;
 
 import org.springframework.util.DigestUtils;
 import java.io.UnsupportedEncodingException;

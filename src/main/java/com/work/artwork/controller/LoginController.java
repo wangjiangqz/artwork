@@ -2,8 +2,8 @@ package com.work.artwork.controller;
 
 import com.work.artwork.common.model.Result;
 import com.work.artwork.common.model.SysUserConstans;
-import com.work.artwork.common.util.CommonUtil;
-import com.work.artwork.common.util.SysUserUtil;
+import com.work.artwork.common.utils.CommonUtil;
+import com.work.artwork.common.utils.SysUserUtil;
 import com.work.artwork.entity.SysUser;
 import com.work.artwork.service.SysUserService;
 import org.springframework.stereotype.Controller;
@@ -48,6 +48,7 @@ public class LoginController {
         }
         sysUser = sysUserList.stream().findFirst().get();
         if (sysUser.getPassword().equals(CommonUtil.MD5(loginPwd))) {
+            SysUserUtil.userLogin(sysUser);
             session.setAttribute(SysUserConstans.SESSION_USER_KEY, sysUser);
             return new Result();
         } else {
@@ -67,7 +68,7 @@ public class LoginController {
     }
 
     /**
-     * 功能描述: 登出
+     * 功能描述: 登入
      *
      * @return
      */
