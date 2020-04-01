@@ -1,11 +1,11 @@
 package com.work.artwork.service.impl;
 
-import com.work.artwork.entity.UserTest;
 import com.work.artwork.dao.UserTestDao;
+import com.work.artwork.entity.UserTest;
 import com.work.artwork.service.UserTestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Service("userTestService")
 public class UserTestServiceImpl implements UserTestService {
-    @Resource
+    @Autowired
     private UserTestDao userTestDao;
 
     /**

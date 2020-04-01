@@ -1,7 +1,9 @@
 package com.work.artwork.dao;
 
 import com.work.artwork.entity.UserTest;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 
 /**
@@ -10,6 +12,7 @@ import java.util.List;
  * @author makejava
  * @since 2020-03-31 17:05:34
  */
+@Mapper
 public interface UserTestDao {
 
     /**
