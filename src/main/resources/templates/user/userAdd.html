@@ -1,0 +1,159 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>个人中心</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/common/global.css"/>
+    <script src="/static/plugins/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+    <div th:include="/common/head :: commonHead"></div>
+</head>
+<body>
+
+<div class="layui-fluid" style="padding:15px; min-height: 100%;">
+    <div class="layui-fluid" style="background-color: white; min-height: 100%;">
+
+        <form class="layui-form" action="/after/sysUser/userSave" method="post" enctype="multipart/form-data">
+            <div class="layui-card">
+                <div class="layui-card-header">个人信息管理</div>
+                <div class="layui-card-body" style="padding: 15px;">
+                    <input type="hidden" id="userType" name="usertype" th:value="${sysUser.usertype}"/>
+                    <input type="hidden" id="id" name="id" th:value="${sysUser.id}"/>
+                    <input type="hidden" id="status" name="status" th:value="${sysUser.status}"/>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">登录名：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="username" th:value="${sysUser.username}"
+                                   lay-verify="required|noCheck" placeholder="请输入登录名"
+                                   autocomplete="off" class="layui-input"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">名称</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="name" th:value="${sysUser.name}"
+                                   lay-verify="required" placeholder="请输入名称"
+                                   autocomplete="off" class="layui-input"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label width_auto text-r" style="margin-top:2px">地址：</label>
+                        <div class="layui-input-inline" style="width:400px">
+                            <input type="text" autocomplete="on" class="layui-input" id="addressCode" name="addressCode"
+                                   readonly="readonly" data-toggle="city-picker" placeholder="请选择">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">详细地址：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="addressdetail" th:value="${sysUser.addressdetail}"
+                                   lay-verify="required|noCheck" placeholder="请输入详细地址"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">密码</label>
+                        <div class="layui-input-inline">
+                            <input type="password" id="password" name="password" lay-verify="required"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">确认密码</label>
+                        <div class="layui-input-inline">
+                            <input type="password" id="passwordS" name="passwordS" lay-verify="required|passwordSe"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">&nbsp;</label>
+                        <div class="layui-input-inline">
+                            <button class="layui-btn layui-btn-fluid layui-btn-normal" lay-submit
+                                    lay-filter="userAdd">提 交
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </form>
+
+    </div>
+</div>
+</body>
+<script>
+
+
+    layui.extend({
+        citypicker: '/static/plugins/layui/layui_exts/city-picker/city-picker'
+    }).use(['form', 'layer', 'citypicker'], function () {
+        var form = layui.form;
+        var layer = layui.layer;
+        var $ = layui.$;
+        var cityPicker = layui.citypicker;
+
+        var currentPicker = new cityPicker("#addressCode", {});
+        currentPicker.setValue("河南省/信阳市/新县");
+
+        if ($("#updateFlag").val() == '1') {
+            layer.msg("修改成功！");
+        }
+
+        // 1、自定义校验（基础校验不满足的情况下）
+        form.verify({
+            passwordSe: function (value, item) { //value：表单的值、item：表单的DOM对象
+                if (value != $("#password").val()) {
+                    return "两次密码不一致！";
+                }
+            },
+            noCheck: function (value, item) {
+                var flag = true;
+                var msg = "";
+                $.ajax({
+                    url: "/after/login/checkNo",
+                    method: "POST",
+                    data: {"userName": value, "id": $("#id").val()},
+                    async: false,
+                    dataType: "json",
+                    success: function (res) {
+                        flag = res.isSuccess;
+                        msg = res.errorMsg;
+                    }
+                });
+                if (!flag) {
+                    return msg;
+                }
+            }
+        });
+
+        // 2、监听提交
+        form.on('submit(userAdd)', function (data) {
+            layer.msg("人员添加成功！");
+            return true;
+        });
+
+
+        form.on('select(a)', function (data) {
+            $("#a").val(data.value).change();
+            form.render();
+        })
+
+        form.on('select(b)', function (data) {
+            $("#b").val(data.value).change();
+            form.render();
+        })
+
+        form.on('select(c)', function (data) {
+            $("#c").val(data.value).change();
+            form.render();
+        })
+
+
+    });
+</script>
+</html>

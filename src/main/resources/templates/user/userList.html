@@ -1,0 +1,154 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>人员信息列表</title>
+    <div th:include="/common/head :: commonHead"></div>
+    <link rel="stylesheet" type="text/css" href="/static/css/common/global.css"/>
+</head>
+<body>
+
+<div class="layui-fluid" style="padding:15px; min-height: 100%;">
+    <div class="layui-fluid" style="background-color: white; min-height: 100%;">
+
+        <div class="layui-row layui-col-space5" style="padding-top: 15px; ">
+            <input type="hidden" id="updateFlag" th:value="${updateFlag}"/>
+            <div class="layui-col-md1" style="line-height: 38px;">
+                <span>登录名：</span>
+            </div>
+
+            <div class="layui-col-md3 layui-col-xs6">
+                <input class="layui-input" name="userName" id="userName" autocomplete="off"
+                       placeholder="输入登录名">
+            </div>
+
+            <div class="layui-col-md3 layui-col-xs4"
+                 style="text-align: center; vertical-align: middle; line-height: 35px;">
+                <button class="layui-btn" id="report_list_search_btn" data-type="reload">搜索</button>
+                <button class="layui-btn layuiadmin-btn-list" data-type="add" onclick="addPerson();">添加</button>
+            </div>
+        </div>
+
+        <div style="padding-bottom: 10px;">
+
+        </div>
+
+        <table class="layui-table" id="demo" lay-filter="test"></table>
+
+        <div>&nbsp;</div>
+        <div>&nbsp;</div>
+    </div>
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-xs   layui-btn-danger" lay-event="del">删除</a>
+    </script>
+
+    <script>
+
+        // 开启调用的组件
+        layui.use(['laypage', 'layer', 'table'], function () {
+            var laypage = layui.laypage //分页
+                , layer = layui.layer //弹层
+                , table = layui.table //表格
+            ;
+
+            // 1、表格格式化数据
+            table.render({
+                elem: '#demo'
+                , height: 480
+                , url: '/after/sysUser/userListData' // 数据接口
+                , title: '用户表' // 描述
+                , page: true //开启分页
+                , cols: [
+                    [ //表头
+                        {field: 'id', title: 'ID', width: 50, fixed: 'left', hide: true}
+                        , {field: 'username', title: '登录名'}
+                        , {field: 'name', title: '名称'}
+                        , {align: 'center', toolbar: '#barDemo'}
+                    ]
+                ]
+            });
+
+            // 2、操作栏触发方法
+            table.on('tool(test)', function (obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+                var data = obj.data; //获得当前行数据
+                var layEvent = obj.event; //获得 lay-event 对应的值
+                if (layEvent === 'detail') {
+
+                    $.ajax({
+                        url: "/after/sysUser/updateStatus",
+                        method: "POST",
+                        data: {"id": data.id},
+                        dataType: "json",
+                        async: false,
+                        success: function (res) {
+                            if (res.result == "ok") {
+                                layer.msg("认证成功！");
+                                window.location.href = '/after/sysUser/userList';
+                            }
+                        }
+                    });
+
+                } else if (layEvent === 'edit') {
+                    window.location.href = '/after/sysUser/userAdd?id=' + data.id;
+                } else if (layEvent === 'del') {
+                    layer.open({
+                        content: '确定删除吗？'
+                        , btn: ['确定', '取消']
+                        , yes: function (index, layero) {
+                            $.ajax({
+                                url: "/after/sysUser/userDel",
+                                method: "POST",
+                                data: {"id": data.id},
+                                dataType: "json",
+                                success: function (res) {
+                                    layer.confirm('删除成功', {
+                                        btn: ['确定']
+                                    }, function (index) {
+                                        window.location.href = '/after/sysUser/userList';
+                                    });
+                                }
+                            });
+
+                        }
+                        , btn2: function (index, layero) {
+
+                        }
+                        , cancel: function () {
+
+                        }
+                    });
+                }
+            });
+
+            // 3、分页配置
+            laypage.render({
+                elem: 'pageDemo' //分页容器的id
+                , count: 100 //  后台查询后会默认赋值，可以先写100
+                , skin: '#1E9FFF' //自定义选中色值
+                //,skip: true //开启跳页
+                , jump: function (obj, first) {
+                    if (!first) {
+                        layer.msg('第' + obj.curr + '页', {offset: 'b'});
+                    }
+                }
+            });
+
+            // 4、查询
+            $('#report_list_search_btn').on('click', function () {
+                table.reload('demo', {
+                    where: { //  查询条件赋值
+                        username: $("#userName").val()
+                    }
+                    , page: {
+                        curr: 1 // 重新从第 1 页开始
+                    }
+                });
+            });
+        });
+
+        function addPerson() {
+            window.location.href = '/after/sysUser/userAdd?id=0';
+        }
+    </script>
+</div>
+</body>
+</html>

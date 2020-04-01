@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.work.artwork.dao.SysUserDao">
+
+    <resultMap type="com.work.artwork.entity.SysUser" id="SysUserMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="username" column="userName" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="VARCHAR"/>
+        <result property="delflag" column="delFlag" jdbcType="VARCHAR"/>
+        <result property="usertype" column="userType" jdbcType="VARCHAR"/>
+        <result property="createby" column="createBy" jdbcType="VARCHAR"/>
+        <result property="createdate" column="createDate" jdbcType="TIMESTAMP"/>
+        <result property="updateby" column="updateBy" jdbcType="VARCHAR"/>
+        <result property="addresscode" column="addressCode" jdbcType="VARCHAR"/>
+        <result property="updatedate" column="updateDate" jdbcType="TIMESTAMP"/>
+        <result property="addressdetail" column="addressDetail" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="SysUserMap">
+        select
+          id, userName, password, name, status, delFlag, userType, createBy, createDate, updateBy, addressCode, updateDate, addressDetail
+        from artwork.sys_user
+        where id = #{id}
+    </select>
+
+    <!--查询单个-->
+    <select id="queryByModel" resultMap="SysUserMap">
+        select
+        id, userName, password, name, status, delFlag, userType, createBy, createDate, updateBy, addressCode, updateDate, addressDetail
+        from artwork.sys_user
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="SysUserMap">
+        select
+          id, userName, password, name, status, delFlag, userType, createBy, createDate, updateBy, addressCode, updateDate, addressDetail
+        from artwork.sys_user
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="SysUserMap">
+        select
+        id, userName, password, name, status, delFlag, userType, createBy, createDate, updateBy, addressCode,
+        updateDate, addressDetail
+        from artwork.sys_user
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="username != null and username != ''">
+                and userName = #{username}
+            </if>
+            <if test="password != null and password != ''">
+                and password = #{password}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status}
+            </if>
+            <if test="delflag != null and delflag != ''">
+                and delFlag = #{delflag}
+            </if>
+            <if test="usertype != null and usertype != ''">
+                and userType = #{usertype}
+            </if>
+            <if test="createby != null and createby != ''">
+                and createBy = #{createby}
+            </if>
+            <if test="createdate != null">
+                and createDate = #{createdate}
+            </if>
+            <if test="updateby != null and updateby != ''">
+                and updateBy = #{updateby}
+            </if>
+            <if test="addresscode != null and addresscode != ''">
+                and addressCode = #{addresscode}
+            </if>
+            <if test="updatedate != null">
+                and updateDate = #{updatedate}
+            </if>
+            <if test="addressdetail != null and addressdetail != ''">
+                and addressDetail = #{addressdetail}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into artwork.sys_user(userName, password, name, status, delFlag, userType, createBy, createDate, updateBy, addressCode, updateDate, addressDetail)
+        values (#{username}, #{password}, #{name}, #{status}, #{delflag}, #{usertype}, #{createby}, #{createdate}, #{updateby}, #{addresscode}, #{updatedate}, #{addressdetail})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update artwork.sys_user
+        <set>
+            <if test="username != null and username != ''">
+                userName = #{username},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="status != null and status != ''">
+                status = #{status},
+            </if>
+            <if test="delflag != null and delflag != ''">
+                delFlag = #{delflag},
+            </if>
+            <if test="usertype != null and usertype != ''">
+                userType = #{usertype},
+            </if>
+            <if test="createby != null and createby != ''">
+                createBy = #{createby},
+            </if>
+            <if test="createdate != null">
+                createDate = #{createdate},
+            </if>
+            <if test="updateby != null and updateby != ''">
+                updateBy = #{updateby},
+            </if>
+            <if test="addresscode != null and addresscode != ''">
+                addressCode = #{addresscode},
+            </if>
+            <if test="updatedate != null">
+                updateDate = #{updatedate},
+            </if>
+            <if test="addressdetail != null and addressdetail != ''">
+                addressDetail = #{addressdetail},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from artwork.sys_user where id = #{id}
+    </delete>
+
+    <select id="queryListCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM sys_user a
+        WHERE 1 = 1
+        <if test="name != null and name != ''">
+            AND INSTR(a.name, #{name}) > 0
+        </if>
+        <if test="userName != null and userName != ''">
+            AND INSTR(a.userName, #{userName}) > 0
+        </if>
+        <if test="status != null and status != ''">
+            AND status = #{status}
+        </if>
+    </select>
+
+    <select id="queryListData" parameterType="java.util.Map" resultMap="SysUserMap">
+        SELECT id, userName, password, name, status, delFlag, userType, createBy, createDate, updateBy, addressCode, updateDate, addressDetail
+        FROM sys_user a
+        WHERE 1 = 1
+        <if test="name != null and name != ''">
+            AND INSTR(a.name, #{name}) > 0
+        </if>
+        <if test="userName != null and userName != ''">
+            AND INSTR(a.userName, #{userName}) > 0
+        </if>
+        <if test="status != null and status != ''">
+            AND status = #{status}
+        </if>
+        ORDER BY a.id DESC
+        limit #{page}, #{limit}
+    </select>
+
+    <select id="checkNo" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM sys_user a
+        WHERE 1 = 1
+        <if test="userName != null and userName != ''">
+            AND INSTR(a.userName, #{userName}) > 0
+        </if>
+        <if test="id != null and id != ''">
+            AND id = #{id}
+        </if>
+    </select>
+
+</mapper>

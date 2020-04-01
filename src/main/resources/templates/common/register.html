@@ -1,0 +1,115 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>DEMO</title>
+
+    <meta charset="UTF-8">
+    <div th:include="/common/head :: commonHead"></div>
+    <link rel="stylesheet" type="text/css" href="/static/css/login/login.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/demo/index.css"/>
+</head>
+<body layadmin-themealias="default" class="layui-layout-body">
+
+<div id="LAY_app" class="layadmin-tabspage-none" style="overflow: hidden">
+    <div style="background-color:#32a5e1; height: 23%; text-align: center; width: 100%;">
+        <div style="width: 100%; margin: 0 auto; text-align: right; padding: 10px 15px 0 0; color: #ffffff; font-size: 12px;"></div>
+        <div style="color: white; font-size: 50px; padding: 15px 0 0 60px; width: 1200px; clear: both; margin: 0 auto; text-align: left;">
+            DEMO
+        </div>
+    </div>
+    <div style="width: 100%; height: 70%; position: relative; background: url('/static//images/login.png') no-repeat 150px -3px;">
+        <fo style="height: 450px; width: 315px; border: 1px solid #009fe3; position: absolute;left: 60%;top: -20px;background-color: white;">
+            <div style="width: 0;height: 0;border-bottom: 19px solid #075071;border-left: 12px solid transparent;position: absolute;left:-13px;"></div>
+            <div style="margin: 0; padding: 0; font-size: 28px; color: black; text-align: center; width: 315px; height: 75px; line-height: 75px;
+            background: linear-gradient(top, #4188c3, white);
+            background: -ms-linear-gradient(top, #4188c3, white);
+            background: -webkit-linear-gradient(top, #4188c3, white);
+            background: -moz-linear-gradient(top, #4188c3, white);">
+                <p th:text="${userType} == 2 ? '服 务 商 注 册'"></p>
+                <p th:text="${userType} == 3 ? '代 理 商 注 册'"></p>
+            </div>
+            <form class="layui-form" action="/after/login/saveRegister" method="post"
+                  style="padding-top:50px; width: 315px; height: 325px; background-color: #edebec">
+                <input type="hidden" name="userType" value="${userType}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 60px;">帐号</label>
+                    <div class="layui-input-block" style="width: 180px;">
+                        <input type="text" name="username" lay-verify="required|noCheck" placeholder="请输入帐号"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 60px;">姓名</label>
+                    <div class="layui-input-block" style="width: 180px;">
+                        <input type="text" name="name" lay-verify="required" placeholder="请输入姓名"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 60px;">密码</label>
+                    <div class="layui-input-block" style="width: 180px;">
+                        <input type="password" id="password" name="password" lay-verify="required"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 60px;">确认密码</label>
+                    <div class="layui-input-block" style="width: 180px;">
+                        <input type="password" id="passwordS" name="passwordS" lay-verify="required|passwordSe"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <button class="layui-btn layui-btn-fluid layui-btn-normal" lay-submit lay-filter="registerAdd">注 册
+                    </button>
+                </div>
+            </form>
+        </fo>
+    </div>
+</div>
+<div style="background-color: #edebec; text-align: center; height: 8%; line-height: 36px; font-size: 12px; margin: 0; padding: 0;">
+    COPYRIGHT ©2020 客服热线：000-00000000
+</div>
+</div>
+</body>
+<script>
+    layui.use(['form', 'layer'], function () {
+        var form = layui.form;
+        var layer = layui.layer;
+
+        // 1、自定义校验（基础校验不满足的情况下）
+        form.verify({
+            passwordSe: function (value, item) { //value：表单的值、item：表单的DOM对象
+                if (value != $("#password").val()) {
+                    return "两次密码不一致！";
+                }
+            },
+            noCheck: function (value, item) {
+                var flag = true;
+                var msg = "";
+                $.ajax({
+                    url: "/after/login/checkNo",
+                    method: "POST",
+                    data: {"username": value},
+                    async: false,
+                    dataType: "json",
+                    success: function (res) {
+                        flag = res.isSuccess;
+                        msg = res.errorMsg;
+                    }
+                });
+                if (!flag) {
+                    return msg;
+                }
+            }
+        });
+
+        // 2、监听提交
+        form.on('submit(registerAdd)', function (data) {
+            layer.msg("恭喜你，注册成功！");
+            return true;
+        });
+    });
+</script>
+</html>

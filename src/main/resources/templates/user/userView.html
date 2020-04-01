@@ -1,0 +1,77 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>人员信息查看</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/common/global.css"/>
+    <script src="/static/js/waiter/waiterList.js" type="text/javascript" charset="utf-8"></script>
+    <div th:include="/common/head :: commonHead"></div>
+</head>
+<body>
+<div class="layui-fluid" style="padding:15px; min-height: 100%;">
+    <div class="layui-fluid" style="background-color: white; min-height: 100%;">
+
+
+        <div class="layui-card">
+            <div class="layui-card-header">人员信息查看</div>
+            <div class="layui-card-body" style="padding: 15px;">
+                <input type="hidden" name="userType" value="3">
+                <input type="hidden" name="id" value="${ user.id}">
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">工号</label>
+                    <div class="layui-form-label" style="width: auto;">
+                        ${ user.no}
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">姓名</label>
+                    <div class="layui-form-label" style="width: auto;">
+                        ${ user.name}
+                    </div>
+                </div>
+
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">系别</label>
+                    <div class="layui-form-label" style="width: auto;">
+                        ${ user.xiType}
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">班级</label>
+                    <div class="layui-form-label" style="width: auto;">
+                        ${ user.beClass}
+                    </div>
+                </div>
+
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">密码</label>
+                    <div class="layui-form-label" style="width: auto;">
+                        ${user.password}
+                    </div>
+                </div>
+
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">&nbsp;</label>
+                    <div class="layui-input-inline">
+                        <button class="layui-btn layui-btn-fluid layui-btn-normal" lay-submit
+                                onclick="returnList()">返 回
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function returnList() {
+        window.location.href = '/after/sysUser/userList';
+    }
+</script>
+
+</body>
+</html>
